@@ -45,7 +45,7 @@ class SMTPClient:
         if not self.sock:
             raise RuntimeError("Socket is not connected")
         # Receive banner
-        banner = self._recv_data(self.banner_timeout)
+        banner = self._recv_data(self.banner_timeout, f"waiting for SMTP banner from {self.host_ip}:{self.port}")
         if banner:
             events.append(SessionEvent(direction="recv", payload=banner))
         for cmd in commands:
@@ -53,7 +53,11 @@ class SMTPClient:
             self.sock.sendall(cmd.data)
             events.append(SessionEvent(direction="send", payload=cmd.data))
             if cmd.expect_response:
-                received = self._recv_data(self.command_timeout)
+                preview = self._preview_command(cmd.data)
+                received = self._recv_data(
+                    self.command_timeout,
+                    f"waiting for response to command {preview} from {self.host_ip}:{self.port}",
+                )
                 if received is not None:
                     events.append(SessionEvent(direction="recv", payload=received))
             pause = self.delay_between_commands + cmd.pause_after
@@ -61,12 +65,22 @@ class SMTPClient:
                 time.sleep(pause)
         return events
 
-    def _recv_data(self, timeout: float) -> bytes | None:
+    def _recv_data(self, timeout: float, stage: str) -> bytes:
         if not self.sock:
-            return None
+            raise RuntimeError("Socket is not connected")
         self.sock.settimeout(timeout)
         try:
             data = self.sock.recv(self.read_chunk)
-            return data
-        except socket.timeout:
-            return b""
+        except socket.timeout as exc:
+            raise socket.timeout(f"{stage} (timeout {timeout}s)") from exc
+        if data == b"":
+            raise ConnectionError(f"Connection closed while {stage}")
+        return data
+
+    @staticmethod
+    def _preview_command(payload: bytes, max_length: int = 40) -> str:
+        # Show a short, safe preview of the command to make timeout errors easier to read.
+        text = payload.decode("latin1", errors="replace")
+        if len(text) > max_length:
+            text = f"{text[:max_length]}..."
+        return repr(text)

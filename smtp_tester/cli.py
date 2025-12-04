@@ -10,8 +10,18 @@ from .core.runner import BatchRunner
 from .core.task_loader import TaskLoader
 
 
+class MarkerArgumentParser(argparse.ArgumentParser):
+    """Argument parser that emits marker-prefixed errors."""
+
+    def error(self, message: str) -> None:
+        # Show usage then emit marked error for consistency with CLI output style.
+        self.print_usage(sys.stderr)
+        print(f"[!] {message}", file=sys.stderr)
+        sys.exit(2)
+
+
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Direct SMTP sender against MX servers")
+    parser = MarkerArgumentParser(description="Direct SMTP sender against MX servers")
     parser.add_argument("--batch", required=True, help="Path to batch directory containing task.py/config.py/mx_target.yaml")
     parser.add_argument("--tasks", nargs="*", help="Optional task names to run")
     return parser.parse_args()
@@ -33,6 +43,13 @@ def main() -> None:
         if not mx_records:
             print("[!] No MX targets loaded")
             sys.exit(1)
+        if args.tasks:
+            task_names = {task.name for task in tasks}
+            missing = set(args.tasks) - task_names
+            if missing:
+                print(f"[!] unknown task(s): {', '.join(sorted(missing))}")
+                print(f"[*] available tasks: {', '.join(sorted(task_names))}")
+                sys.exit(1)
         runner = BatchRunner(batch_path, config, tasks, mx_records)
         runner.run(args.tasks)
     except Exception as exc:  # noqa: BLE001

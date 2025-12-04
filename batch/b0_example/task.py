@@ -6,7 +6,7 @@ TEMPLATES = {
         {"data": "DATA\r\n"},
         {
             "data": "Subject: {subject}\r\nFrom: {mail_from}\r\nTo: {rcpt_to}\r\n\r\n{body}\r\n",
-            "expect_response": False,
+            "expect_response": True,
         },
         {"data": ".\r\n"},
         {"data": "QUIT\r\n"},
@@ -19,7 +19,7 @@ TEMPLATES = {
     ],
 
     "timeout": [
-        {"data": "EHLO {ehlo}\r\n"},
+        {"data": "EHLO {ehlo}"},
     ]
 }
 
@@ -33,7 +33,7 @@ TASKS = [
             "mail_from": "test-114514@default.com",
             "rcpt_to": "test-114514@163.com",
             "subject": "send mail test",
-            "body": "hello from smtp tester",
+            "body": "hello from smtp tester\n.dot stuff test",
         },
     },
 
