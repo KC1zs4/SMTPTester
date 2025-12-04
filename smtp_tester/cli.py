@@ -14,7 +14,7 @@ class MarkerArgumentParser(argparse.ArgumentParser):
     """Argument parser that emits marker-prefixed errors."""
 
     def error(self, message: str) -> None:
-        # Show usage then emit marked error for consistency with CLI output style.
+        # show usage
         self.print_usage(sys.stderr)
         print(f"[!] {message}", file=sys.stderr)
         sys.exit(2)

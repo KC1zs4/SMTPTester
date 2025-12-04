@@ -55,7 +55,7 @@ class BatchRunner:
         print(f"[*] {record.domain} -> {record.ip} task={task.name}")
         try:
             client.connect()
-            events.extend(client.run_sequence(task.commands))
+            client.run_sequence(task.commands, events=events)
         except (socket.timeout, ConnectionError, OSError) as exc:
             status = "error"
             error = str(exc)

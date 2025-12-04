@@ -40,8 +40,8 @@ class SMTPClient:
             finally:
                 self.sock = None
 
-    def run_sequence(self, commands: List[CommandSpec]) -> List[SessionEvent]:
-        events: List[SessionEvent] = []
+    def run_sequence(self, commands: List[CommandSpec], events: Optional[List[SessionEvent]] = None) -> List[SessionEvent]:
+        events = events if events is not None else []
         if not self.sock:
             raise RuntimeError("Socket is not connected")
         # Receive banner

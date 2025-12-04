@@ -6,7 +6,7 @@ TEMPLATES = {
         {"data": "DATA\r\n"},
         {
             "data": "Subject: {subject}\r\nFrom: {mail_from}\r\nTo: {rcpt_to}\r\n\r\n{body}\r\n",
-            "expect_response": True,
+            "expect_response": False,
         },
         {"data": ".\r\n"},
         {"data": "QUIT\r\n"},

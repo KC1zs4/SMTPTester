@@ -3,18 +3,15 @@
   preference: 50
   ips:
   - 220.197.33.203
-- hostname: 163mx01.mxmail.netease.com
-  preference: 10
-  ips:
-  - 220.197.33.203
-# 126.com:
-#   - hostname: 126mx02.mxmail.netease.com
-#     preference: 10
-#     ips:
-#       - 117.135.214.12
-#       - 117.135.214.17
-#   - hostname: 126mx03.mxmail.netease.com
-#     preference: 10
-#     ips:
-#       - 117.135.214.12
-#       - 117.135.214.17
+# - hostname: 163mx01.mxmail.netease.com
+#   preference: 10
+#   ips:
+#   - 220.197.33.203
+# outlook.com:
+# - hostname: outlook-com.olc.protection.outlook.com
+#   preference: 5
+#   ips:
+#   - 52.101.8.33
+#   - 52.101.10.0
+#   - 52.101.10.13
+#   - 52.101.194.10
