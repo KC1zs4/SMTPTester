@@ -19,7 +19,7 @@ Usage
 ```
 python -m smtp_tester.cli --batch batch/b0_example
 # run specific tasks
-python -m smtp_tester.cli --batch batch/b0_example --tasks test_mail noop_check
+python -m smtp_tester.cli --batch batch/b0_example --tasks send_mail_test
 ```
 
 Template definitions

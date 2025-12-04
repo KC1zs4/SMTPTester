@@ -1,10 +1,17 @@
 TEMPLATES = {
-    "simple_mail": [
+    "normal_mail": [
         b"EHLO {ehlo}\r\n",
         b"MAIL FROM:<{mail_from}>\r\n",
         b"RCPT TO:<{rcpt_to}>\r\n",
         b"DATA\r\n",
-        b"Subject: {subject}\r\nFrom: {mail_from}\r\nTo: {rcpt_to}\r\n\r\n{body}\r\n.\r\n",
+
+        b"Subject: {subject}\r\n"
+        b"From: {mail_from}\r\n"
+        b"To: {rcpt_to}\r\n"
+        b"\r\n"
+        b"{body}\r\n"
+        b".\r\n",
+
         b"QUIT\r\n",
     ],
 
@@ -14,7 +21,7 @@ TEMPLATES = {
         b"QUIT\r\n",
     ],
 
-    "timeout": [
+    "ehlo_timeout": [
         b"EHLO {ehlo}",
     ]
 }
@@ -22,19 +29,21 @@ TEMPLATES = {
 TASKS = [
 
     {
-        "name": "test_mail",
-        "template": "simple_mail",
+        "name": "send_mail_test",
+        "template": "normal_mail",
         "values": {
             "ehlo": b"default.com",
             "mail_from": b"test-114514@default.com",
             "rcpt_to": b"test-114514@163.com",
             "subject": b"send mail test",
-            "body": "你好".encode("utf-8") + b" from smtp tester\n.dot stuff test",
+            "body": "你好".encode("utf-8") +
+                    b" from smtp tester\n"
+                    b".dot stuff test",
         },
     },
 
     {
-        "name": "noop_check",
+        "name": "noop_test",
         "template": "noop_probe",
         "values": {
             "ehlo": b"default.com",
@@ -43,7 +52,7 @@ TASKS = [
 
     {
         "name": "timeout_test",
-        "template": "timeout",
+        "template": "ehlo_timeout",
         "values": {
             "ehlo": b"default.com",
         }
