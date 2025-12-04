@@ -1,16 +1,20 @@
-126.com:
-  - hostname: 126mx02.mxmail.netease.com
-    preference: 10
-    ips:
-      - 117.135.214.12
-      - 117.135.214.17
-  - hostname: 126mx03.mxmail.netease.com
-    preference: 10
-    ips:
-      - 117.135.214.12
-      - 117.135.214.17
 163.com:
-  - hostname: 163mx03.mxmail.netease.com
-    preference: 10
-    ips:
-      - 117.135.214.11
+- hostname: 163mx00.mxmail.netease.com
+  preference: 50
+  ips:
+  - 220.197.33.203
+- hostname: 163mx01.mxmail.netease.com
+  preference: 10
+  ips:
+  - 220.197.33.203
+# 126.com:
+#   - hostname: 126mx02.mxmail.netease.com
+#     preference: 10
+#     ips:
+#       - 117.135.214.12
+#       - 117.135.214.17
+#   - hostname: 126mx03.mxmail.netease.com
+#     preference: 10
+#     ips:
+#       - 117.135.214.12
+#       - 117.135.214.17

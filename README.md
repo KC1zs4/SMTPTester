@@ -11,7 +11,7 @@ Layout
   - `task.py` task/templates describing SMTP byte sequences.
   - `config.py` execution tuning (timeouts, delays, log path).
   - `mx_target.yaml` MX targets; each IPv4 is hit once per task.
-- `logs/` session logs in YAML (`latin-1` payload to keep bytes intact).
+- `logs/` session logs in YAML (`latin-1` payload to keep bytes intact) grouped by batch+timestamp and domain, e.g. `log/b0_example_20240101T120000/gmail.com.yaml`.
 
 Usage
 -----

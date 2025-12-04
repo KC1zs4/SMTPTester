@@ -24,7 +24,8 @@ class BatchRunner:
         self.tasks = tasks
         self.mx_records = sorted(mx_records, key=lambda r: (r.domain, r.preference, r.hostname, r.ip))
         log_dir = Path(config.get("log_dir", "logs"))
-        self.logger = SessionLogger(log_dir, batch_path.name)
+        self.run_ts = datetime.utcnow().strftime("%Y%m%dT%H%M%S")
+        self.logger = SessionLogger(log_dir, batch_path.name, run_ts=self.run_ts)
 
     def run(self, selected_tasks: Optional[Iterable[str]] = None) -> None:
         names = set(selected_tasks) if selected_tasks else None
