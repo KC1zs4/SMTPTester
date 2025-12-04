@@ -1,25 +1,21 @@
 TEMPLATES = {
     "simple_mail": [
-        {"data": "EHLO {ehlo}\r\n"},
-        {"data": "MAIL FROM:<{mail_from}>\r\n"},
-        {"data": "RCPT TO:<{rcpt_to}>\r\n"},
-        {"data": "DATA\r\n"},
-        {
-            "data": "Subject: {subject}\r\nFrom: {mail_from}\r\nTo: {rcpt_to}\r\n\r\n{body}\r\n",
-            "expect_response": False,
-        },
-        {"data": ".\r\n"},
-        {"data": "QUIT\r\n"},
+        b"EHLO {ehlo}\r\n",
+        b"MAIL FROM:<{mail_from}>\r\n",
+        b"RCPT TO:<{rcpt_to}>\r\n",
+        b"DATA\r\n",
+        b"Subject: {subject}\r\nFrom: {mail_from}\r\nTo: {rcpt_to}\r\n\r\n{body}\r\n.\r\n",
+        b"QUIT\r\n",
     ],
 
     "noop_probe": [
-        {"data": "EHLO {ehlo}\r\n"},
-        {"data": "NOOP\r\n"},
-        {"data": "QUIT\r\n"},
+        b"EHLO {ehlo}\r\n",
+        b"NOOP\r\n",
+        b"QUIT\r\n",
     ],
 
     "timeout": [
-        {"data": "EHLO {ehlo}"},
+        b"EHLO {ehlo}",
     ]
 }
 

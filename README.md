@@ -22,6 +22,13 @@ python -m smtp_tester.cli --batch batch/b0_example
 python -m smtp_tester.cli --batch batch/b0_example --tasks test_mail noop_check
 ```
 
+Template definitions
+--------------------
+
+- Commands are defined as Python `bytes` literals (e.g., `b"EHLO {ehlo}\\r\\n"`); `{placeholders}` are formatted with task `values` then encoded as latin-1.
+- Each command waits for an SMTP reply; send multi-line DATA payloads (including the terminating `.\r\n`) as a single command to avoid mid-body timeouts.
+- Optional `pause_after` is still supported via a dict entry, e.g., `{"data": b"QUIT\\r\\n", "pause_after": 0.5}`.
+
 Notes
 -----
 

@@ -8,7 +8,6 @@ from typing import List, Optional
 @dataclass
 class CommandSpec:
     data: bytes
-    expect_response: bool = True
     pause_after: float = 0.0
 
 

@@ -52,14 +52,13 @@ class SMTPClient:
             self.sock.settimeout(self.command_timeout)
             self.sock.sendall(cmd.data)
             events.append(SessionEvent(direction="send", payload=cmd.data))
-            if cmd.expect_response:
-                preview = self._preview_command(cmd.data)
-                received = self._recv_data(
-                    self.command_timeout,
-                    f"waiting for response to command {preview} from {self.host_ip}:{self.port}",
-                )
-                if received is not None:
-                    events.append(SessionEvent(direction="recv", payload=received))
+            preview = self._preview_command(cmd.data)
+            received = self._recv_data(
+                self.command_timeout,
+                f"waiting for response to command {preview} from {self.host_ip}:{self.port}",
+            )
+            if received is not None:
+                events.append(SessionEvent(direction="recv", payload=received))
             pause = self.delay_between_commands + cmd.pause_after
             if pause > 0:
                 time.sleep(pause)

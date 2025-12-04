@@ -44,15 +44,15 @@ class TaskLoader:
 
     @staticmethod
     def _normalize_command(entry: Any, values: dict) -> CommandSpec:
-        expect_response = True
         pause_after = 0.0
         raw = entry
         if isinstance(entry, dict):
+            if "data" not in entry:
+                raise ValueError("Command dict must include data")
             raw = entry.get("data")
-            expect_response = entry.get("expect_response", True)
             pause_after = float(entry.get("pause_after", 0.0))
         data_bytes = TaskLoader._render_bytes(raw, values)
-        return CommandSpec(data=data_bytes, expect_response=bool(expect_response), pause_after=pause_after)
+        return CommandSpec(data=data_bytes, pause_after=pause_after)
 
     @staticmethod
     def _render_bytes(raw: Any, values: dict) -> bytes:
