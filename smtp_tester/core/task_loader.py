@@ -55,6 +55,7 @@ class TaskLoader:
         return CommandSpec(data=data_bytes, pause_after=pause_after)
 
     @staticmethod
+    @staticmethod
     def _render_bytes(raw: Any, values: dict) -> bytes:
         if isinstance(raw, bytes):
             text = raw.decode("latin1")
@@ -62,5 +63,9 @@ class TaskLoader:
             text = raw
         else:
             raise ValueError("Command data must be str or bytes or dict with data")
-        formatted = text.format(**values) if values else text
+        formatted_values = {
+            key: val.decode("latin1") if isinstance(val, (bytes, bytearray)) else val
+            for key, val in values.items()
+        } if values else {}
+        formatted = text.format(**formatted_values) if formatted_values else text
         return formatted.encode("latin1")

@@ -26,6 +26,7 @@ Template definitions
 --------------------
 
 - Commands are defined as Python `bytes` literals (e.g., `b"EHLO {ehlo}\\r\\n"`); `{placeholders}` are formatted with task `values` then encoded as latin-1.
+- Task `values` may be `str` or `bytes`; any bytes values are decoded with latin-1 before substitution so you can keep everything byte-oriented in `task.py`.
 - Each command waits for an SMTP reply; send multi-line DATA payloads (including the terminating `.\r\n`) as a single command to avoid mid-body timeouts.
 - Optional `pause_after` is still supported via a dict entry, e.g., `{"data": b"QUIT\\r\\n", "pause_after": 0.5}`.
 

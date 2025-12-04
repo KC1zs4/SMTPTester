@@ -25,11 +25,11 @@ TASKS = [
         "name": "test_mail",
         "template": "simple_mail",
         "values": {
-            "ehlo": "default.com",
-            "mail_from": "test-114514@default.com",
-            "rcpt_to": "test-114514@163.com",
-            "subject": "send mail test",
-            "body": "hello from smtp tester\n.dot stuff test",
+            "ehlo": b"default.com",
+            "mail_from": b"test-114514@default.com",
+            "rcpt_to": b"test-114514@163.com",
+            "subject": b"send mail test",
+            "body": "你好".encode("utf-8") + b" from smtp tester\n.dot stuff test",
         },
     },
 
@@ -37,7 +37,7 @@ TASKS = [
         "name": "noop_check",
         "template": "noop_probe",
         "values": {
-            "ehlo": "default.com",
+            "ehlo": b"default.com",
         },
     },
 
@@ -45,7 +45,7 @@ TASKS = [
         "name": "timeout_test",
         "template": "timeout",
         "values": {
-            "ehlo": "default.com",
+            "ehlo": b"default.com",
         }
     }
 ]
