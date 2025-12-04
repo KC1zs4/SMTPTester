@@ -29,6 +29,7 @@ Template definitions
 - Task `values` may be `str` or `bytes`; any bytes values are decoded with latin-1 before substitution so you can keep everything byte-oriented in `task.py`.
 - Each command waits for an SMTP reply; send multi-line DATA payloads (including the terminating `.\r\n`) as a single command to avoid mid-body timeouts.
 - Optional `pause_after` is still supported via a dict entry, e.g., `{"data": b"QUIT\\r\\n", "pause_after": 0.5}`.
+- Per-domain overrides: add `targets={"gmail.com": {"rcpt_to": b"user@gmail.com"}, "qq.com": {"rcpt_to": b"user@qq.com"}}` inside a task; entries merge with `values` when that domain from `mx_target.yaml` is being run.
 
 Notes
 -----

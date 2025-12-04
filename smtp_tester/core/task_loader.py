@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .models import CommandSpec, TaskDefinition
+from .models import CommandTemplate, TaskDefinition
 from .utils import load_python_module
 
 
@@ -33,17 +33,29 @@ class TaskLoader:
         values = data.get("values", {})
         if not isinstance(values, dict):
             raise ValueError(f"Task {name} values must be dict")
+        target_values = data.get("targets") or data.get("target_values") or {}
+        if target_values and not isinstance(target_values, dict):
+            raise ValueError(f"Task {name} targets must be a dict keyed by domain")
+        for domain, override in target_values.items():
+            if not isinstance(override, dict):
+                raise ValueError(f"Task {name} target override for {domain} must be a dict")
         commands_source = data.get("commands")
         if commands_source is None:
             template_name = data.get("template")
             if template_name not in self.templates:
                 raise ValueError(f"Task {name} references missing template {template_name}")
             commands_source = self.templates[template_name]
-        commands = [self._normalize_command(cmd, values) for cmd in commands_source]
-        return TaskDefinition(name=name, commands=commands, description=description, values=values)
+        commands = [self._normalize_command(cmd) for cmd in commands_source]
+        return TaskDefinition(
+            name=name,
+            commands=commands,
+            description=description,
+            values=values,
+            target_values=target_values or None,
+        )
 
     @staticmethod
-    def _normalize_command(entry: Any, values: dict) -> CommandSpec:
+    def _normalize_command(entry: Any) -> CommandTemplate:
         pause_after = 0.0
         raw = entry
         if isinstance(entry, dict):
@@ -51,21 +63,4 @@ class TaskLoader:
                 raise ValueError("Command dict must include data")
             raw = entry.get("data")
             pause_after = float(entry.get("pause_after", 0.0))
-        data_bytes = TaskLoader._render_bytes(raw, values)
-        return CommandSpec(data=data_bytes, pause_after=pause_after)
-
-    @staticmethod
-    @staticmethod
-    def _render_bytes(raw: Any, values: dict) -> bytes:
-        if isinstance(raw, bytes):
-            text = raw.decode("latin1")
-        elif isinstance(raw, str):
-            text = raw
-        else:
-            raise ValueError("Command data must be str or bytes or dict with data")
-        formatted_values = {
-            key: val.decode("latin1") if isinstance(val, (bytes, bytearray)) else val
-            for key, val in values.items()
-        } if values else {}
-        formatted = text.format(**formatted_values) if formatted_values else text
-        return formatted.encode("latin1")
+        return CommandTemplate(raw=raw, pause_after=pause_after)

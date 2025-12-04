@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Iterable, List, Optional
 
 from .logger import SessionLogger
-from .models import CommandSpec, MXRecord, SessionEvent, SessionLog, TaskDefinition
+from .models import MXRecord, SessionEvent, SessionLog, TaskDefinition
 from .smtp_client import SMTPClient
 
 
@@ -55,7 +55,8 @@ class BatchRunner:
         print(f"[*] {record.domain} -> {record.ip} task={task.name}")
         try:
             client.connect()
-            client.run_sequence(task.commands, events=events)
+            commands = task.render_commands(record.domain)
+            client.run_sequence(commands, events=events)
         except (socket.timeout, ConnectionError, OSError) as exc:
             status = "error"
             error = str(exc)

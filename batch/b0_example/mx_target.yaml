@@ -2,11 +2,42 @@
 - hostname: 163mx00.mxmail.netease.com
   preference: 50
   ips:
-  - 220.197.33.203
+  - 117.135.214.11
 # - hostname: 163mx01.mxmail.netease.com
 #   preference: 10
 #   ips:
-#   - 220.197.33.203
+#   - 117.135.214.11
+# - hostname: 163mx02.mxmail.netease.com
+#   preference: 10
+#   ips:
+#   - 117.135.214.11
+# - hostname: 163mx03.mxmail.netease.com
+#   preference: 10
+#   ips:
+#   - 117.135.214.11
+qq.com:
+- hostname: mx1.qq.com
+  preference: 30
+  ips:
+  - 114.132.130.61
+#   - 114.132.130.146
+# - hostname: mx2.qq.com
+#   preference: 20
+#   ips:
+#   - 106.53.137.60
+#   - 106.53.137.86
+#   - 112.60.0.200
+#   - 114.132.114.99
+#   - 114.132.114.226
+#   - 114.132.130.61
+#   - 114.132.130.146
+#   - 120.241.149.185
+# - hostname: mx3.qq.com
+#   preference: 10
+#   ips:
+#   - 112.60.15.191
+#   - 120.233.20.111
+#   - 120.241.149.185
 # outlook.com:
 # - hostname: outlook-com.olc.protection.outlook.com
 #   preference: 5
