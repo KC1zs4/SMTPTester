@@ -12,7 +12,7 @@ DEFAULTS: dict[str, Any] = {
     "banner_timeout": 5.0,
     "delay_between_commands": 0,
     "delay_between_hosts": 1.0,
-    "log_dir": "logs",
+    "log_dir": "log",
     "read_chunk": 4096,
     "port": 25,
 }

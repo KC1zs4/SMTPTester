@@ -31,7 +31,6 @@ class MXRecord:
 @dataclass
 class SessionEvent:
     direction: str  # "send" or "recv"
-    timestamp: datetime
     payload: bytes
 
 

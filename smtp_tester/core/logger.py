@@ -50,7 +50,6 @@ class SessionLogger:
             serialized.append(
                 {
                     "direction": event.direction,
-                    "timestamp": event.timestamp.isoformat(),
                     "bytes": event.payload.decode("latin1", errors="surrogateescape"),
                 }
             )

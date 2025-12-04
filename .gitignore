@@ -1,5 +1,7 @@
 batch/*
 !batch/b0_example/
+log/*
+logs/
 
 # python
 __pycache__/

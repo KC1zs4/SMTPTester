@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import socket
 import time
-from datetime import datetime
 from typing import List, Optional
 
 from .models import CommandSpec, SessionEvent
@@ -48,16 +47,15 @@ class SMTPClient:
         # Receive banner
         banner = self._recv_data(self.banner_timeout)
         if banner:
-            events.append(SessionEvent(direction="recv", timestamp=datetime.utcnow(), payload=banner))
+            events.append(SessionEvent(direction="recv", payload=banner))
         for cmd in commands:
             self.sock.settimeout(self.command_timeout)
-            sent_at = datetime.utcnow()
             self.sock.sendall(cmd.data)
-            events.append(SessionEvent(direction="send", timestamp=sent_at, payload=cmd.data))
+            events.append(SessionEvent(direction="send", payload=cmd.data))
             if cmd.expect_response:
                 received = self._recv_data(self.command_timeout)
                 if received is not None:
-                    events.append(SessionEvent(direction="recv", timestamp=datetime.utcnow(), payload=received))
+                    events.append(SessionEvent(direction="recv", payload=received))
             pause = self.delay_between_commands + cmd.pause_after
             if pause > 0:
                 time.sleep(pause)
