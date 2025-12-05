@@ -50,6 +50,7 @@ class BatchRunner:
             command_timeout=float(self.config.get("command_timeout", 8.0)),
             banner_timeout=float(self.config.get("banner_timeout", 8.0)),
             read_chunk=int(self.config.get("read_chunk", 4096)),
+            delay_before_first_command=float(self.config.get("delay_before_first_command", 0.0)),
             delay_between_commands=float(self.config.get("delay_between_commands", 0.0)),
         )
         print(f"[*] {record.domain} -> {record.ip} task={task.name}")

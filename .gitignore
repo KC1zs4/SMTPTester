@@ -5,3 +5,7 @@ logs/
 
 # python
 __pycache__/
+/test.py
+
+# local workspace
+workspace/

@@ -16,6 +16,7 @@ class SMTPClient:
         command_timeout: float = 8.0,
         banner_timeout: float = 8.0,
         read_chunk: int = 4096,
+        delay_before_first_command: float = 0.0,
         delay_between_commands: float = 0.0,
     ):
         self.host_ip = host_ip
@@ -24,6 +25,7 @@ class SMTPClient:
         self.command_timeout = command_timeout
         self.banner_timeout = banner_timeout
         self.read_chunk = read_chunk
+        self.delay_before_first_command = delay_before_first_command
         self.delay_between_commands = delay_between_commands
         self.sock: Optional[socket.socket] = None
 
@@ -48,6 +50,8 @@ class SMTPClient:
         banner = self._recv_data(self.banner_timeout, f"waiting for SMTP banner from {self.host_ip}:{self.port}")
         if banner:
             events.append(SessionEvent(direction="recv", payload=banner))
+        if self.delay_before_first_command > 0:
+            time.sleep(self.delay_before_first_command)
         for cmd in commands:
             self.sock.settimeout(self.command_timeout)
             self.sock.sendall(cmd.data)

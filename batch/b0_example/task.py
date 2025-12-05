@@ -34,7 +34,7 @@ TASKS = [
         "values": {
             "ehlo": b"default.com",
             "mail_from": b"test-114514@default.com",
-            "rcpt_to": b"test-114514@example.com",
+            "rcpt_to": b"test-114514@163.com",
             "subject": b"send mail test",
             "body": "你好".encode("utf-8") +
                     b" from smtp tester default\n"
