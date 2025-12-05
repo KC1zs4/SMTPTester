@@ -33,6 +33,8 @@ class BatchRunner:
             for task in self.tasks:
                 if names and task.name not in names:
                     continue
+                if task.target_values and record.domain not in task.target_values:
+                    continue
                 self._run_single(record, task)
             delay_hosts = float(self.config.get("delay_between_hosts", 0))
             if delay_hosts > 0:
