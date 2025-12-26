@@ -82,8 +82,11 @@ class BatchRunner:
             error=error,
             events=events,
         )
-        path = self.logger.log_session(session)
-        if status == "success":
-            print(f"[+] logged {path}")
+        if events:
+            path = self.logger.log_session(session)
+            if status == "success":
+                print(f"[+] logged {path}")
+            else:
+                print(f"[!] failure logged {path} ({error})")
         else:
-            print(f"[!] failure logged {path} ({error})")
+            print(f"[-] skipped log (no send/recv events) for {record.domain} task={task.name}")

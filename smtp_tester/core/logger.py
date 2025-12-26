@@ -51,10 +51,15 @@ class SessionLogger:
         serialized = []
         for event in events:
             raw_text = event.payload.decode("latin1", errors="surrogateescape")
+            # Keep visible CRLF markers while emitting YAML multiline blocks.
+            escaped_lines = [
+                line.replace("\r", "\\r").replace("\n", "\\n")
+                for line in raw_text.splitlines(keepends=True)
+            ]
             serialized.append(
                 {
                     "direction": event.direction,
-                    "bytes_raw": raw_text.encode("unicode_escape").decode("ascii"),
+                    "bytes_raw": "\n".join(escaped_lines),
                 }
             )
         return serialized

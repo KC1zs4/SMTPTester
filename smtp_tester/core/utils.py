@@ -25,7 +25,7 @@ def simple_yaml_dump(data: Any) -> str:
             lines: list[str] = []
             for key, value in obj.items():
                 if isinstance(value, str) and _has_newline(value):
-                    lines.append(f"{pad}{key}: |-")
+                    lines.append(f"{pad}{key}: |")
                     lines.extend(_block_lines(value, indent + 2))
                 elif isinstance(value, (dict, list)):
                     lines.append(f"{pad}{key}:")
@@ -37,7 +37,7 @@ def simple_yaml_dump(data: Any) -> str:
             lines: list[str] = []
             for item in obj:
                 if isinstance(item, str) and _has_newline(item):
-                    lines.append(f"{pad}- |-")
+                    lines.append(f"{pad}- |")
                     lines.extend(_block_lines(item, indent + 2))
                 elif isinstance(item, (dict, list)):
                     lines.append(f"{pad}-")

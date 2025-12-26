@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import select
 import socket
 import time
 from typing import List, Optional
@@ -57,15 +58,23 @@ class SMTPClient:
             self.sock.sendall(cmd.data)
             events.append(SessionEvent(direction="send", payload=cmd.data))
             preview = self._preview_command(cmd.data)
-            received = self._recv_data(
-                self.command_timeout,
-                f"waiting for response to command {preview} from {self.host_ip}:{self.port}",
+            self._drain_available(
+                events,
+                f"streaming response after {preview} from {self.host_ip}:{self.port}",
             )
-            if received is not None:
-                events.append(SessionEvent(direction="recv", payload=received))
             pause = self.delay_between_commands + cmd.pause_after
             if pause > 0:
-                time.sleep(pause)
+                deadline = time.monotonic() + pause
+                self._drain_until_deadline(
+                    events,
+                    f"streaming response during pause after {preview} from {self.host_ip}:{self.port}",
+                    deadline,
+                )
+        self._recv_until_idle(
+            events,
+            f"waiting for remaining responses from {self.host_ip}:{self.port}",
+            self.command_timeout,
+        )
         return events
 
     def _recv_data(self, timeout: float, stage: str) -> bytes:
@@ -79,6 +88,47 @@ class SMTPClient:
         if data == b"":
             raise ConnectionError(f"Connection closed while {stage}")
         return data
+
+    def _drain_available(self, events: List[SessionEvent], stage: str) -> None:
+        if not self.sock:
+            raise RuntimeError("Socket is not connected")
+        while True:
+            readable, _, _ = select.select([self.sock], [], [], 0.0)
+            if not readable:
+                return
+            data = self.sock.recv(self.read_chunk)
+            if data == b"":
+                raise ConnectionError(f"Connection closed while {stage}")
+            events.append(SessionEvent(direction="recv", payload=data))
+
+    def _drain_until_deadline(self, events: List[SessionEvent], stage: str, deadline: float) -> None:
+        if not self.sock:
+            raise RuntimeError("Socket is not connected")
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return
+            readable, _, _ = select.select([self.sock], [], [], remaining)
+            if not readable:
+                return
+            data = self.sock.recv(self.read_chunk)
+            if data == b"":
+                raise ConnectionError(f"Connection closed while {stage}")
+            events.append(SessionEvent(direction="recv", payload=data))
+
+    def _recv_until_idle(self, events: List[SessionEvent], stage: str, idle_timeout: float) -> None:
+        if idle_timeout <= 0:
+            return
+        if not self.sock:
+            raise RuntimeError("Socket is not connected")
+        while True:
+            readable, _, _ = select.select([self.sock], [], [], idle_timeout)
+            if not readable:
+                return
+            data = self.sock.recv(self.read_chunk)
+            if data == b"":
+                raise ConnectionError(f"Connection closed while {stage}")
+            events.append(SessionEvent(direction="recv", payload=data))
 
     @staticmethod
     def _preview_command(payload: bytes, max_length: int = 40) -> str:
